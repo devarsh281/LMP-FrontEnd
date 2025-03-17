@@ -1,176 +1,156 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { Button } from "../../ui/button";
+import { Card, CardContent } from "../../ui/card";
 import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import React from "react";
+import { useForm } from "react-hook-form";
 
 interface Admin {
-  firstName: string;
-  lastName: string;
+  username:string;
   email: string;
   phone: number;
   status: string;
   role: string;
 }
 
-function Add() {
-  const [addAdmin, setAddAdmin] = useState<Admin>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone:0,
-    status: "",
-    role: "",
+interface AdminFormProps {
+  data?: Admin;
+  closeModal: () => void;
+  formType: "Admin";
+}
+
+const Add: React.FC<AdminFormProps> = ({ data, closeModal }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<Admin>({
+    defaultValues: {
+      username: data?.username ?? "",
+      email: data?.email ?? "",
+      phone: data?.phone,
+      status: data?.status ?? "Active",
+      role: data?.role ?? "Admin",
+    },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setAddAdmin((prev) => ({
-      ...prev,
-      [name]: name === "phone" ? Number(value) : value,
-    }));
+  const onSubmit = (formData: Admin) => {
+    const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+    admins.push(formData);
+    localStorage.setItem('admins', JSON.stringify(admins)); 
+    console.log(formData);
+
+    reset();
+    closeModal();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(addAdmin);
+  const entityType = "Admin";
+  const action = data ? "Update" : "Add new";
+
+  const handleCancel = () => {
+    reset();
+    closeModal();
   };
 
   return (
-    <div>
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Card className="w-full max-w-md mx-auto overflow-hidden shadow-2xl bg-white/80 backdrop-filter backdrop-blur-lg">
-          <CardHeader className="bg-black text-white p-6">
-            <CardTitle className="text-3xl font-bold text-center">
-              Add New Admin
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <motion.div
-                className="space-y-2"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-              >
-                <Input
-                  type="text"
-                  name="firstName"
-                  placeholder="First Name"
-                  onChange={handleChange}
-                  value={addAdmin.firstName}
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-                />
-              </motion.div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="container mx-5 py-2 space-y-6">
+        <div className="flex justify-between items-center">
+         <h1 className="text-3xl font-bold">
+            {action} {entityType}
+          </h1> 
+          <div className="space-x-4">
+            <Button type="button" variant="outline" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button type="submit">Save</Button>
+          </div>
+        </div>
 
-              <motion.div
-                className="space-y-2"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
-              >
+        <Card className="space-y-6">
+          <CardContent className="pt-6">
+            <div className="grid gap-6 max-w-xl">
+        
+              {/* Last Name */}
+              <div className="space-y-2">
+                <Label htmlFor="username">Last Name</Label>
                 <Input
-                  type="text"
-                  name="lastName"
-                  placeholder="Last Name"
-                  onChange={handleChange}
-                  value={addAdmin.lastName}
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+                  id="username"
+                  placeholder="Enter user name"
+                  {...register("username", { required: "User name is required" })}
                 />
-              </motion.div>
+                {errors.username && (
+                  <p className="text-red-500 text-xs">{errors.username.message}</p>
+                )}
+              </div>
 
-              <motion.div
-                className="space-y-2"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6, duration: 0.5 }}
-              >
+              {/* Email */}
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
                 <Input
+                  id="email"
+                  placeholder="Enter email"
                   type="email"
-                  name="email"
-                  placeholder="Email"
-                  onChange={handleChange}
-                  value={addAdmin.email}
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+                  {...register("email", { required: "Email is required" })}
                 />
-              </motion.div>
+                {errors.email && (
+                  <p className="text-red-500 text-xs">{errors.email.message}</p>
+                )}
+              </div>
 
-              <motion.div
-                className="space-y-2"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.8, duration: 0.5 }}
-              >
+              {/* Phone */}
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone</Label>
                 <Input
-                  type="number"
-                  name="phone"
-                  placeholder="Phone"
-                  onChange={handleChange}
-                  value={addAdmin.phone}
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+                  id="phone"
+                  placeholder="Enter phone number"
+                  type="tel"
+                  {...register("phone", { required: "Phone number is required" })}
                 />
-              </motion.div>
+                {errors.phone && (
+                  <p className="text-red-500 text-xs">{errors.phone.message}</p>
+                )}
+              </div>
 
-              <motion.div
-                className="space-y-2"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1, duration: 0.5 }}
-              >
-                <Input
-                  type="text"
-                  name="status"
-                  placeholder="Status"
-                  onChange={handleChange}
-                  value={addAdmin.status}
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-                />
-              </motion.div>
-
-              <motion.div
-                className="space-y-2"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1.2, duration: 0.5 }}
-              >
-                <Input
-                  type="text"
-                  name="role"
-                  placeholder="Role"
-                  onChange={handleChange}
-                  value={addAdmin.role}
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.4, duration: 0.5 }}
-              >
-                <Button
-                  type="submit"
-                  className="w-full bg-black text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
+              {/* Status */}
+              <div className="space-y-2">
+                <Label htmlFor="status">Status</Label>
+                <select
+                  id="status"
+                  {...register("status", { required: "Status is required" })}
+                  className="w-full px-3 py-2 border rounded-md"
                 >
-                  Add Admin
-                </Button>
-              </motion.div>
-            </form>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+                {errors.status && (
+                  <p className="text-red-500 text-xs">{errors.status.message}</p>
+                )}
+              </div>
+
+              {/* Role */}
+              <div className="space-y-2">
+                <Label htmlFor="role">Role</Label>
+                <select
+                  id="role"
+                  {...register("role", { required: "Role is required" })}
+                  className="w-full px-3 py-2 border rounded-md"
+                >
+                  <option value="Admin">Admin</option>
+                  <option value="Manager">Manager</option>
+                  <option value="HR">HR</option>
+                </select>
+                {errors.role && (
+                  <p className="text-red-500 text-xs">{errors.role.message}</p>
+                )}
+              </div>
+            </div>
           </CardContent>
         </Card>
-      </motion.div>
-    </div>
+      </div>
+    </form>
   );
-}
+};
 
 export default Add;

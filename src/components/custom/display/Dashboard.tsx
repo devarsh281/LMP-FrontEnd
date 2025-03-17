@@ -1,40 +1,48 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { FaMoon, FaSun } from "react-icons/fa"; 
 import Sidebar from "./Side";
+import Navbar from "./Navbar";
 
-
-
-const Dashboard = () => {
+export default function Dashboard() {
   const [darkMode, setDarkMode] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-    if (darkMode) {
-      document.documentElement.classList.remove("dark");
-    } else {
-      document.documentElement.classList.add("dark");
-    }
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode") === "true";
+    const systemDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initialDarkMode = savedDarkMode ?? systemDarkMode;
+    setDarkMode(initialDarkMode);
+  }, []);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
-    <div className={`overflow-x-hidden ${darkMode ? "dark" : ""}`}>
-      <Sidebar />
-      <div className="pt-16 sm:ml-64 p-5">
-        <div
-          className="fixed top-5 right-5 p-3 bg-gray-600 rounded-full cursor-pointer z-50"
-          onClick={toggleTheme}
-        >
-          {darkMode ? (
-            <FaSun className="text-yellow-400 text-xl" />
-          ) : (
-            <FaMoon className="text-gray-400 text-xl" />
-          )}
+    <div className={`${darkMode ? "dark" : ""}`}>
+      <div className="min-h-screen bg-background text-foreground flex flex-col lg:flex-row">
+        {/* Sidebar on the left */}
+        <Sidebar 
+          isOpen={isMobileMenuOpen} 
+          setIsOpen={setIsMobileMenuOpen}
+        />
+
+        {/* Right side with Navbar and content */}
+        <div className="flex-1 flex flex-col w-full lg:ml-64">
+          <Navbar 
+            darkMode={darkMode} 
+            setDarkMode={setDarkMode} 
+            toggleSidebar={toggleMobileMenu}
+          />
+          <main className="flex-1 pt-16 overflow-auto">
+            <div className="container mx-auto p-4 md:p-6">
+              <Outlet />
+            </div>
+          </main>
         </div>
-        <Outlet />
       </div>
     </div>
   );
-};
-
-export default Dashboard;
+}
