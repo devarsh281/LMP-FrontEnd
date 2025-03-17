@@ -30,7 +30,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
   const menuItems = [
     { icon: User2, label: "Admin", path: "/page" },
-    { icon: Users, label: "Staff", path: "/dashboard/analytics" },
+    { icon: Users, label: "Staff", path: "/dashboard/staffs" },
     { icon: MapPin, label: "Location", path: "/dashboard/users" },
     { icon: PanelsRightBottom, label: "Bookings", path: "/dashboard/products" },
     { icon: UserCheck2, label: "Property Owners", path: "/dashboard/calendar" },
