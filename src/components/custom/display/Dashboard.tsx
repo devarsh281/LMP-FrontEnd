@@ -23,21 +23,19 @@ export default function Dashboard() {
   return (
     <div className={`${darkMode ? "dark" : ""}`}>
       <div className="min-h-screen bg-background text-foreground flex flex-col lg:flex-row">
-        {/* Sidebar on the left */}
         <Sidebar 
           isOpen={isMobileMenuOpen} 
           setIsOpen={setIsMobileMenuOpen}
         />
 
-        {/* Right side with Navbar and content */}
         <div className="flex-1 flex flex-col w-full lg:ml-64">
           <Navbar 
             darkMode={darkMode} 
             setDarkMode={setDarkMode} 
             toggleSidebar={toggleMobileMenu}
           />
-          <main className="flex-1 pt-16 overflow-auto">
-            <div className="container mx-auto p-4 md:p-6">
+          <main className="">
+            <div className="p-4 md:p-6">
               <Outlet />
             </div>
           </main>

@@ -28,7 +28,7 @@ export default function Navbar({
 }: NavbarProps) {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
-  const [theme, setTheme] = useState<string | null>("");
+  const [theme, setTheme] = useState<string | null>(null);
 
   const user = {
     name: "Admin",
@@ -36,36 +36,29 @@ export default function Navbar({
   };
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+
     const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
       .matches
       ? "dark"
       : "light";
 
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      setTheme(savedTheme);
-      setDarkMode(savedTheme === "dark");
-    } else {
-      setTheme(systemTheme);
-      setDarkMode(systemTheme === "dark");
-    }
+    const currentTheme = savedTheme || systemTheme;
 
-    document.documentElement.classList.add(darkMode ? "dark" : "light");
+    document.documentElement.classList.add(currentTheme);
 
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [darkMode, setDarkMode]);
+    setTheme(currentTheme);
+    setDarkMode(currentTheme === "dark");
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/");
   };
 
-  const toggleDarkMode = (mode: "light" | "dark" | "system") => {
+  type ThemeMode = "light" | "dark" | "system";
+  
+  const toggleDarkMode = (mode: ThemeMode) => {
     let newTheme = mode;
 
     if (mode === "system") {
@@ -76,7 +69,9 @@ export default function Navbar({
 
     setDarkMode(newTheme === "dark");
     setTheme(newTheme);
+
     localStorage.setItem("theme", newTheme);
+
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 

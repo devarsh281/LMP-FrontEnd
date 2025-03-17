@@ -9,7 +9,6 @@ import { ShieldCheck } from "lucide-react";
 import Add from "./Add";
 import { useState } from "react";
 import Modal from "../../ui/modal";
-import { Button } from "../../ui/button";
 import Display from "./Display";
 
 const AdminPage = () => {
@@ -36,17 +35,13 @@ const AdminPage = () => {
         </Breadcrumb>
       </LayoutBreadcrumb>
 
-      <Button onClick={openModal}>Add Admin</Button>
+      <Display openModal={openModal} />
 
       {isModalOpen && (
-        <Modal
-          closeModal={closeModal}
-          style={{ width: "100px", height: "100px" }}
-        >
+        <Modal closeModal={closeModal} style={{ width: "400", height: "550px" }}>
           <Add closeModal={closeModal} formType="Admin" />
         </Modal>
       )}
-      <Display />
     </>
   );
 };

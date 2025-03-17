@@ -29,8 +29,8 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const location = useLocation();
 
   const menuItems = [
-    { icon: User2, label: "Admin", path: "/page" },
-    { icon: Users, label: "Staff", path: "/dashboard/analytics" },
+    { icon: User2, label: "Admin", path: "page" },
+    { icon: Users, label: "Staff", path: "staff" },
     { icon: MapPin, label: "Location", path: "/dashboard/users" },
     { icon: PanelsRightBottom, label: "Bookings", path: "/dashboard/products" },
     { icon: UserCheck2, label: "Property Owners", path: "/dashboard/calendar" },
@@ -75,7 +75,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
       >
         <div className="flex h-full flex-col">
           <div className="flex justify-center items-center p-10  h-16 text-white">
-            <img src="vite.svg" alt="Logo" height={20} width={40}/>
+            <img src="vite.svg" alt="Logo" height={20} width={40} />
             <h3 className="ml-2">Name</h3>
           </div>
 

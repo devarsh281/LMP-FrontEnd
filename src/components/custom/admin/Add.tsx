@@ -6,7 +6,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 
 interface Admin {
-  username:string;
+  firstName:string,
+  lastName:string;
   email: string;
   phone: number;
   status: string;
@@ -27,7 +28,8 @@ const Add: React.FC<AdminFormProps> = ({ data, closeModal }) => {
     reset,
   } = useForm<Admin>({
     defaultValues: {
-      username: data?.username ?? "",
+      firstName: data?.firstName ?? "",
+      lastName:data?.lastName??"",
       email: data?.email ?? "",
       phone: data?.phone,
       status: data?.status ?? "Active",
@@ -71,21 +73,31 @@ const Add: React.FC<AdminFormProps> = ({ data, closeModal }) => {
         <Card className="space-y-6">
           <CardContent className="pt-6">
             <div className="grid gap-6 max-w-xl">
-        
-              {/* Last Name */}
-              <div className="space-y-2">
-                <Label htmlFor="username">Last Name</Label>
+
+                <div className="space-y-2">
+                <Label htmlFor="firstName">First Name</Label>
                 <Input
-                  id="username"
-                  placeholder="Enter user name"
-                  {...register("username", { required: "User name is required" })}
+                  id="firstName"
+                  placeholder="Enter First name"
+                  {...register("firstName", { required: "First name is required" })}
                 />
-                {errors.username && (
-                  <p className="text-red-500 text-xs">{errors.username.message}</p>
+                {errors.firstName && (
+                  <p className="text-red-500 text-xs">{errors.firstName.message}</p>
+                )}
+              </div>
+        
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input
+                  id="lastName"
+                  placeholder="Enter Last name"
+                  {...register("lastName", { required: "Last name is required" })}
+                />
+                {errors.lastName && (
+                  <p className="text-red-500 text-xs">{errors.lastName.message}</p>
                 )}
               </div>
 
-              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -99,7 +111,6 @@ const Add: React.FC<AdminFormProps> = ({ data, closeModal }) => {
                 )}
               </div>
 
-              {/* Phone */}
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone</Label>
                 <Input
@@ -113,7 +124,6 @@ const Add: React.FC<AdminFormProps> = ({ data, closeModal }) => {
                 )}
               </div>
 
-              {/* Status */}
               <div className="space-y-2">
                 <Label htmlFor="status">Status</Label>
                 <select
@@ -129,7 +139,6 @@ const Add: React.FC<AdminFormProps> = ({ data, closeModal }) => {
                 )}
               </div>
 
-              {/* Role */}
               <div className="space-y-2">
                 <Label htmlFor="role">Role</Label>
                 <select
