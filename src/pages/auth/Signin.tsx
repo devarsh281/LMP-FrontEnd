@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { motion } from "framer-motion";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 
 interface user {
@@ -34,7 +34,7 @@ export function UserAuthForm() {
       setsignIn({ email: "", password: "" });
 
       setTimeout(() => {
-        navigate("/dashboard/page");
+        navigate("/admin");
       }, 2000);
     } catch {
       // Handle errors
@@ -57,7 +57,7 @@ export function UserAuthForm() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card className="w-full max-w-md mx-auto overflow-hidden shadow-2xl bg-white/80 backdrop-filter backdrop-blur-lg">
+        <Card className="w-screen max-w-xs mx-auto overflow-hidden shadow-2xl bg-white/80 backdrop-filter backdrop-blur-lg">
           <CardHeader className="bg-black text-white p-6">
             <CardTitle className="text-3xl font-bold text-center">
               Welcome Back

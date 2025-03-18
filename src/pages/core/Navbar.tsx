@@ -4,16 +4,16 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Moon, Sun, User, LogOut, Menu, MonitorCog } from "lucide-react";
-import { cn } from "../../../lib/utils";
+import { cn } from "../../lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../ui/dropdown-menu";
-import { Button } from "../../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+} from "../../components/ui/dropdown-menu";
+import { Button } from "../../components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 
 interface NavbarProps {
   darkMode: boolean;
@@ -147,27 +147,27 @@ export default function Navbar({
                     <User className="h-4 w-4 text-indigo-500 dark:text-indigo-400" />
                     <span>Profile</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
+                  {/* <DropdownMenuItem
                     className="cursor-pointer gap-2"
                     onClick={() => toggleDarkMode("light")}
                   >
                     <Sun className="h-4 w-4 text-amber-500" />
                     <span>Light Mode</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
+                  </DropdownMenuItem> */}
+                  {/* <DropdownMenuItem
                     className="cursor-pointer gap-2"
                     onClick={() => toggleDarkMode("dark")}
                   >
                     <Moon className="h-4 w-4 text-indigo-400" />
                     <span>Dark Mode</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
+                  </DropdownMenuItem> */}
+                  {/* <DropdownMenuItem
                     className="cursor-pointer gap-2"
                     onClick={() => toggleDarkMode("system")}
                   >
                     <MonitorCog className="h-4 w-4 text-amber-500" />
                     <span>System Default</span>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer gap-2 text-rose-500 focus:text-rose-500 dark:text-rose-400 dark:focus:text-rose-400"

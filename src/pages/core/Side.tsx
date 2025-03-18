@@ -15,9 +15,9 @@ import {
   User2,
   UserCheck2,
 } from "lucide-react";
-import { cn } from "../../../lib/utils";
-import { Button } from "../../ui/button";
-import { ScrollArea } from "../../ui/scroll-area";
+import { cn } from "../../lib/utils";
+import { Button } from "../../components/ui/button";
+import { ScrollArea } from "../../components/ui/scroll-area";
 import { FaBusinessTime } from "react-icons/fa";
 
 interface SidebarProps {
@@ -29,28 +29,36 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const location = useLocation();
 
   const menuItems = [
-    { icon: User2, label: "Admin", path: "page" },
-    { icon: Users, label: "Staff", path: "staff" },
-    { icon: MapPin, label: "Location", path: "/dashboard/users" },
-    { icon: PanelsRightBottom, label: "Bookings", path: "/dashboard/products" },
-    { icon: UserCheck2, label: "Property Owners", path: "/dashboard/calendar" },
-    { icon: Briefcase, label: "Business Accounts", path: "/dashboard/reports" },
-    { icon: FaBusinessTime, label: "Brands", path: "/dashboard/settings" },
-    { icon: HelpCircle, label: "Branding Request", path: "/dashboard/help" },
+    { icon: User2, label: "Admin", path: "/admin" },
+    { icon: Users, label: "Staff", path: "/admin/staffs" },
+    { icon: MapPin, label: "Location", path: "/admin/location" },
+    { icon: PanelsRightBottom, label: "Bookings", path: "/admin/bookings" },
+    { icon: UserCheck2, label: "Property Owners", path: "/admin/owners" },
+    {
+      icon: Briefcase,
+      label: "Business Accounts",
+      path: "/admin/business-accounts",
+    },
+    { icon: FaBusinessTime, label: "Brands", path: "/admin/brands" },
+    {
+      icon: HelpCircle,
+      label: "Branding Request",
+      path: "/admin/branding-request",
+    },
     {
       icon: HelpCircle,
       label: "Brands Categories",
-      path: "/dashboard/reports",
+      path: "/admin/brands-categories",
     },
-    { icon: Building, label: "Cities", path: "/dashboard/settings" },
-    { icon: LocateFixed, label: "Location Type", path: "/dashboard/help" },
+    { icon: Building, label: "Cities", path: "/admin/cities" },
+    { icon: LocateFixed, label: "Location Type", path: "/admin/location-type" },
     {
       icon: LucideOctagonAlert,
       label: "Location Categories",
-      path: "/dashboard/help",
+      path: "/admin/location-categories",
     },
-    { icon: HelpCircle, label: "Budget Items", path: "/dashboard/help" },
-    { icon: Settings, label: "Configurations", path: "/dashboard/settings" },
+    { icon: HelpCircle, label: "Budget Items", path: "/admin/budget-items" },
+    { icon: Settings, label: "Configurations", path: "/admin/configurations" },
   ];
 
   const isActive = (path: string) => {
@@ -68,10 +76,10 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
       <aside
         className={cn(
-          "fixed top-0 bottom-0 left-0 z-40 w-64 border-r bg-card transition-transform duration-300 ease-in-out lg:translate-x-0 bg-black",
-          "dark:bg-slate-900 dark:border-slate-800",
+          "fixed top-0 bottom-0 left-0 z-40 w-64 border-r bg-card transition-transform duration-300 ease-in-out lg:translate-x-0 ",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
+        style={{ background: "#1689FE" }}
       >
         <div className="flex h-full flex-col">
           <div className="flex justify-center items-center p-10  h-16 text-white">
@@ -99,17 +107,12 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                   onClick={() => setIsOpen(false)}
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
-                    isActive(item.path)
-                      ? "bg-indigo-600 text-white dark:bg-indigo-800 dark:text-white"
-                      : "text-white hover:bg-indigo-50 hover:text-indigo-700 dark:text-slate-300 dark:hover:bg-slate-800/60 dark:hover:text-indigo-300"
+                    "text-white hover:bg-indigo-50 hover:text-gray-500 dark:text-slate-300 dark:hover:bg-slate-800/60 dark:hover:text-gray-500"
                   )}
                 >
                   <item.icon
                     className={cn(
-                      "h-5 w-5",
-                      isActive(item.path)
-                        ? "text-white dark:text-white"
-                        : "text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:group-hover:text-indigo-300"
+                      "h-5 w-5 transition-colors duration-200 hover:text-gray-500"
                     )}
                   />
                   {item.label}
