@@ -1,13 +1,33 @@
-
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../src/components/ui/table";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "../../../src/components/ui/table";
 import { Badge } from "../../../src/components/ui/badge";
 import { Input } from "../../../src/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../src/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "../../../src/components/ui/select";
 import { Search, X } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pencil, Trash } from "lucide-react";
-import { Button } from "../../../src/components/ui/button"
+import { ShieldCheck } from "lucide-react";
+import { LayoutBreadcrumb } from "../../components/custom/layout/layout";
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbList,
+    BreadcrumbPage,
+} from "../../../src/components/ui/breadcrumb";
+import { Button } from "../../../src/components/ui/button";
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -20,11 +40,9 @@ import {
     AlertDialogAction,
 } from "../../../src/components/ui/alert-dialog";
 import useStaff from "./useStaff";
-const staffMembers = [
-    { id: 1, firstName: "John", lastName: "Doe", email: "john@example.com", phone: "1234567890", status: "Active" },
-    { id: 2, firstName: "Jane", lastName: "Smith", email: "jane@example.com", phone: "9876543210", status: "Inactive" },
-    { id: 3, firstName: "Alice", lastName: "Brown", email: "alice@example.com", phone: "5556667777", status: "Active" },
-];
+import Modal from "../../../src/components/ui/modal";
+import { StaffForm } from "./staffForm";
+
 
 const Staff = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
@@ -34,14 +52,30 @@ const Staff = () => {
     const [searchPhone, setSearchPhone] = useState<string>("");
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
-   const { staffList, deleteStaff, updateStaff } = useStaff()
+    const { staffList, deleteStaff, updateStaff } = useStaff();
     const handleDeleteClick = (staffId: string) => {
         deleteStaff(staffId);
         setOpen(true);
     };
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+    const [isView, setIsView] = useState(false);
+    const [selectedStaffId, setSelectedStaffId] = useState<string | null>(null);
+    
+    const openModal = (id?: string, edit = false, view = false) => {
+        setSelectedStaffId(id || null);
+        setIsEdit(edit);
+        setIsView(view);
+        setIsModalOpen(true);
+    };
+    
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setIsEdit(false);
+        setIsView(false);
+        setSelectedStaffId(null);
+    };
     const confirmDelete = () => {
-        
         setOpen(false);
     };
     const filteredStaff = useMemo(() => {
@@ -54,17 +88,25 @@ const Staff = () => {
                     fullName.includes(searchLower) ||
                     staff.email.toLowerCase().includes(searchLower) ||
                     staff.phone.includes(searchLower)) &&
-                (!statusFilter || statusFilter === "all" || staff.status === statusFilter)
+                (!statusFilter ||
+                    statusFilter === "all" ||
+                    staff.status === statusFilter)
             );
         });
     }, [searchTerm, statusFilter]);
 
     return (
-        <div className=" mx-auto ">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Staff Members</h1>
-            </div>
+        <div className="mx-auto">
+            {/* Breadcrumb (Make sure it's rendered properly) */}
+
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbPage className="text-3xl font-bold mb-5">Staff</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
+
 
 
             {/* Filters */}
@@ -107,20 +149,14 @@ const Staff = () => {
                     </div>
                 </div>
                 <div>
-                    <Button>
-                        Add New
-                    </Button>
+                    <Button onClick={openModal}>Add New</Button>
                 </div>
-
             </div>
-
-
-
 
             {/* Staff Table */}
             <Table className="w-full border rounded-lg shadow-md">
                 <TableHeader className="bg-gray-100 dark:bg-gray-800 items-center">
-                    <TableRow >
+                    <TableRow>
                         <TableHead className="p-3 text-center font-bold text-black">Name</TableHead>
                         <TableHead className="text-center font-bold text-black">Email</TableHead>
                         <TableHead className="text-center font-bold text-black">Phone</TableHead>
@@ -129,55 +165,52 @@ const Staff = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {filteredStaff.length === 0 ? (
-                        <TableRow>
-                            <TableCell colSpan={5} className="text-center py-6">
-                                <span className="text-muted-foreground">No staff members found</span>
-                            </TableCell>
-                        </TableRow>
-                    ) : (
-                        filteredStaff.map((staff) => (
-                            <TableRow
-                                key={staff.id}
-                                className="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                                onClick={() => navigate(`/staff/${staff.id}`)}
-                            >
-                                <TableCell className="p-3 font-medium capitalize">
-                                  {staff.name}
-                                </TableCell>
-                                <TableCell>{staff.email}</TableCell>
-                                <TableCell>{staff.phone}</TableCell>
+    {filteredStaff.length === 0 ? (
+        <TableRow>
+            <TableCell colSpan={5} className="text-center py-6">
+                <span className="text-muted-foreground">No staff members found</span>
+            </TableCell>
+        </TableRow>
+    ) : (
+        filteredStaff.map((staff) => (
+            <TableRow
+                key={staff.id}
+                className="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                onClick={() => openModal(staff.id, false, true)} // Open in view mode
+            >
+                <TableCell className="p-3 font-medium capitalize">{staff.name}</TableCell>
+                <TableCell>{staff.email}</TableCell>
+                <TableCell>{staff.phone}</TableCell>
+                <TableCell>{staff.status}</TableCell>
+                <TableCell className="flex items-center justify-center">
+                    {/* Edit Button */}
+                    <div
+                        className="p-2 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                        onClick={(e) => {
+                            e.stopPropagation(); // Prevent row click
+                            openModal(staff.id, true, false); // Open in edit mode
+                        }}
+                    >
+                        <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                    </div>
 
-                                <TableCell>
-
-                                    {staff.status}
-
-                                </TableCell>
-                                <TableCell className="flex items-center justify-center">
-                                    {/* Edit Button */}
-                                    <div
-                                        className="p-2 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                                        onClick={() => navigate(`/updateStaffForm/${staff.id}`)}
-                                    >
-                                        <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                                    </div>
-
-                                    {/* Delete Button */}
-                                    <div
-                                        className="p-2 rounded-md cursor-pointer hover:bg-red-100 dark:hover:bg-red-700 transition"
-                                        onClick={(e) => {
-                                            e.stopPropagation(); // Prevent row click from triggering
-                                            handleDeleteClick(staff.id);
-                                        }}
-                                    >
-                                        <Trash className="w-5 h-5 text-red-500 hover:text-red-700" />
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    )}
-                </TableBody>
+                    {/* Delete Button */}
+                    <div
+                        className="p-2 rounded-md cursor-pointer hover:bg-red-100 dark:hover:bg-red-700 transition"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(staff.id);
+                        }}
+                    >
+                        <Trash className="w-5 h-5 text-red-500 hover:text-red-700" />
+                    </div>
+                </TableCell>
+            </TableRow>
+        ))
+    )}
+</TableBody>
             </Table>
+
             <AlertDialog open={open} onOpenChange={setOpen}>
                 <AlertDialogContent className="p-6">
                     <AlertDialogHeader>
@@ -187,20 +220,24 @@ const Staff = () => {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel
-                            onClick={() => setOpen(false)}
-                            className="text-base"
-                        >
+                        <AlertDialogCancel onClick={() => setOpen(false)} className="text-base">
                             Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-
+            {isModalOpen && (
+    <Modal closeModal={closeModal}>
+        <h1 className="text-lg font-semibold mb-4 text-left">
+            {isEdit ? "Edit Staff" : isView ? "View Staff" : "Add Staff"}
+        </h1>
+        <StaffForm onClose={closeModal} isEdit={isEdit} isView={isView} staffId={selectedStaffId} />
+    </Modal>
+)}
         </div>
+
     );
 };
 
 export default Staff;
-
