@@ -22,8 +22,6 @@ import { AdminRole, AdminStatus } from "./types";
 
 export const AdminForm = ({
   onClose,
-  isEdit,
-  isView,
 }: {
   onClose: () => void;
   isView?: boolean;

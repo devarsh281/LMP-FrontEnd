@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { cn } from "../../lib/utils"
+
 
 interface ModalProps {
   children: React.ReactNode
@@ -10,7 +10,7 @@ interface ModalProps {
   className?: string
 }
 
-const Modal = ({ children, closeModal, title, className }: ModalProps) => {
+const Modal = ({ children, closeModal }: ModalProps) => {
   // Close modal when clicking outside
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {

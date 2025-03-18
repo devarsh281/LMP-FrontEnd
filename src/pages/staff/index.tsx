@@ -8,13 +8,7 @@ import {
 } from "../../../src/components/ui/table";
 import { Badge } from "../../../src/components/ui/badge";
 import { Input } from "../../../src/components/ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../../../src/components/ui/select";
+i
 import { Search, X } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -51,7 +45,6 @@ const Staff = () => {
     const [searchEmail, setSearchEmail] = useState<string>("");
     const [searchPhone, setSearchPhone] = useState<string>("");
     const [open, setOpen] = useState(false);
-    const navigate = useNavigate();
     const { staffList, deleteStaff, updateStaff } = useStaff();
     const handleDeleteClick = (staffId: string) => {
         deleteStaff(staffId);
