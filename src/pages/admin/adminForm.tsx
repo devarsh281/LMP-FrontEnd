@@ -1,172 +1,216 @@
-import { Button } from "../../components/ui/button";
-import { Card, CardContent } from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import React from "react";
+import { useState } from "react";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "../../../src/components/ui/form";
+import { Input } from "../../../src/components/ui/input";
+import { Label } from "../../../src/components/ui/label";
+import { Button } from "../../../src/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../../../src/components/ui/select";
+import { Card } from "../../../src/components/ui/card";
 import { useForm } from "react-hook-form";
-import { AdminResponse, AdminStatus } from "./types";
+import { AdminRole, AdminStatus } from "./types";
 
-interface AdminFormProps {
-  data?: AdminResponse;
-  closeModal: () => void;
-  formType: "Admin";
-  onSave?: (formData: AdminResponse) => void; 
-}
-
-const Add: React.FC<AdminFormProps> = ({ data, closeModal, onSave }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<AdminResponse>({
-    defaultValues: {
-      firstname: data?.firstname ?? "",
-      lastname: data?.lastname ?? "",
-      email: data?.email ?? "",
-      phone: data?.phone ?? "",
-      status: data?.status ?? AdminStatus.ACTIVE,
-      role: data?.role ?? "Admin",
-      id: data?.id,
-    },
+export const AdminForm = ({
+  onClose,
+  isEdit,
+  isView,
+}: {
+  onClose: () => void;
+  isView?: boolean;
+  isEdit?: boolean;
+}) => {
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    mobileNumber: "",
+    status: AdminStatus.ACTIVE,
+    role: AdminRole.ADMIN,
   });
 
-  const onSubmit = (formData: AdminResponse) => {
-    const submittedData = {
-      ...formData,
-      id: data?.id ?? Date.now().toString(), 
-      createdAt: data?.createdAt ?? new Date(),
-      updatedAt: new Date(),
-    };
-
-    console.log("Submitted Data:", submittedData);
-
-    if (onSave) {
-      onSave(submittedData);
-    }
-
-    reset();
-    closeModal();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const entityType = "Admin";
-  const action = data ? "Update" : "Add new";
-
-  const handleCancel = () => {
-    reset();
-    closeModal();
+  const handleStatusChange = (value: AdminStatus) => {
+    setFormData((prev) => ({ ...prev, status: value }));
   };
 
+  const handleRoleChange = (value: AdminRole) => {
+    setFormData((prev) => ({ ...prev, role: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    onClose();
+  };
+  const form = useForm();
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="container mx-5 py-2 space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">
-            {action} {entityType}
-          </h1>
-          <div className="space-x-4">
-            <Button type="button" variant="outline" onClick={handleCancel}>
+    <Card className="p-6 border border-gray-300 rounded-lg shadow-md">
+      <Form {...form}>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="firstname"
+            render={() => (
+              <FormItem>
+                <Label htmlFor="firstname" className="block text-left">
+                  First Name
+                </Label>
+                <FormControl>
+                  <Input
+                    type="text"
+                    id="firstname"
+                    name="firstname"
+                    value={formData.firstname}
+                    onChange={handleChange}
+                    required
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="lastname"
+            render={() => (
+              <FormItem>
+                <Label htmlFor="lastname" className="block text-left">
+                  Last Name
+                </Label>
+                <FormControl>
+                  <Input
+                    type="text"
+                    id="lastname"
+                    name="lastname"
+                    value={formData.lastname}
+                    onChange={handleChange}
+                    required
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="email"
+            render={() => (
+              <FormItem>
+                <Label htmlFor="email" className="block text-left">
+                  Email Address
+                </Label>
+                <FormControl>
+                  <Input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="mobileNumber"
+            render={() => (
+              <FormItem>
+                <Label htmlFor="mobileNumber" className="block text-left">
+                  Mobile Number
+                </Label>
+                <FormControl>
+                  <Input
+                    type="tel"
+                    id="mobileNumber"
+                    name="mobileNumber"
+                    value={formData.mobileNumber}
+                    onChange={handleChange}
+                    required
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="status"
+            render={() => (
+              <FormItem>
+                <Label className="block text-left">Status</Label>
+                <FormControl>
+                  <Select
+                    onValueChange={handleStatusChange}
+                    defaultValue={formData.status}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={AdminStatus.ACTIVE}>Active</SelectItem>
+                      <SelectItem value={AdminStatus.INACTIVE}>
+                        Inactive
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="status"
+            render={() => (
+              <FormItem>
+                <Label className="block text-left">Role</Label>
+                <FormControl>
+                  <Select
+                    onValueChange={handleRoleChange}
+                    defaultValue={formData.role}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={AdminRole.ADMIN}>Admin</SelectItem>
+                      <SelectItem value={AdminRole.MANAGER}>
+                        Manager
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex space-x-2 justify-end my-5">
+            <Button type="submit">Submit</Button>
+            <Button type="button" variant="secondary" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit">Save</Button>
           </div>
-        </div>
-
-        <Card className="space-y-6">
-          <CardContent className="pt-6">
-            <div className="grid gap-6 max-w-xl">
-              {/* First Name */}
-              <div className="space-y-2">
-                <Label htmlFor="firstname">First Name</Label>
-                <Input
-                  id="firstname"
-                  placeholder="Enter first name"
-                  {...register("firstname", { required: "First name is required" })}
-                />
-                {errors.firstname && (
-                  <p className="text-red-500 text-xs">{errors.firstname.message}</p>
-                )}
-              </div>
-
-              {/* Last Name */}
-              <div className="space-y-2">
-                <Label htmlFor="lastname">Last Name</Label>
-                <Input
-                  id="lastname"
-                  placeholder="Enter last name"
-                  {...register("lastname", { required: "Last name is required" })}
-                />
-                {errors.lastname && (
-                  <p className="text-red-500 text-xs">{errors.lastname.message}</p>
-                )}
-              </div>
-
-              {/* Email */}
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  placeholder="Enter email"
-                  type="email"
-                  {...register("email", { required: "Email is required" })}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-xs">{errors.email.message}</p>
-                )}
-              </div>
-
-              {/* Phone */}
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                  id="phone"
-                  placeholder="Enter phone number"
-                  type="tel"
-                  {...register("phone", { required: "Phone number is required" })}
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-xs">{errors.phone.message}</p>
-                )}
-              </div>
-
-              {/* Status */}
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <select
-                  id="status"
-                  {...register("status", { required: "Status is required" })}
-                  className="w-full px-3 py-2 border rounded-md"
-                >
-                  <option value={AdminStatus.ACTIVE}>Active</option>
-                  <option value={AdminStatus.INACTIVE}>Inactive</option>
-                </select>
-                {errors.status && (
-                  <p className="text-red-500 text-xs">{errors.status.message}</p>
-                )}
-              </div>
-
-              {/* Role */}
-              <div className="space-y-2">
-                <Label htmlFor="role">Role</Label>
-                <select
-                  id="role"
-                  {...register("role", { required: "Role is required" })}
-                  className="w-full px-3 py-2 border rounded-md"
-                >
-                  <option value="Admin">Admin</option>
-                  <option value="Manager">Manager</option>
-                  <option value="HR">HR</option>
-                </select>
-                {errors.role && (
-                  <p className="text-red-500 text-xs">{errors.role.message}</p>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </form>
+        </form>
+      </Form>
+    </Card>
   );
 };
-
-export default Add;

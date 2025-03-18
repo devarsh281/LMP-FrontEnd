@@ -34,7 +34,7 @@ export function UserAuthForm() {
       setsignIn({ email: "", password: "" });
 
       setTimeout(() => {
-        navigate("/dashboard/admin");
+        navigate("/admin");
       }, 2000);
     } catch {
       // Handle errors

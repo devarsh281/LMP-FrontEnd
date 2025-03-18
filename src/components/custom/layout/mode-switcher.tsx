@@ -11,7 +11,7 @@ export function ModeSwitcher() {
 
     return (
         <Button
-            className="relative p-2 rounded-lg"
+            className="relative p-2 rounded-lg "
             size="icon"
             variant="ghost"
             onClick={() => setTheme(isDark ? "light" : "dark")}

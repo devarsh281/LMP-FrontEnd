@@ -2,23 +2,21 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { UserAuthForm } from "./pages/auth/Signin";
 import Staff from "./pages/staff";
-import AdminPage from "./pages/admin/page";
 import Dashboard from "./pages/core/Dashboard";
+import Admin from "./pages/admin";
 
 function App() {
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<UserAuthForm />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<UserAuthForm />} />
 
-          <Route path="/dashboard" element={<Dashboard />}>
-            <Route path="admin" element={<AdminPage />} />
-            <Route path="staffs" element={<Staff />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+        <Route path="/admin" element={<Dashboard />}>
+          <Route index element={<Admin />} />
+          <Route path="staffs" element={<Staff />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

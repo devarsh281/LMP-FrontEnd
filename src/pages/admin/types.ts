@@ -3,6 +3,11 @@ export enum AdminStatus {
   INACTIVE = "inactive",
 }
 
+export enum AdminRole{
+  ADMIN="Admin",
+  MANAGER="Manager"
+}
+
 export interface Admin {
   firstname: string;
   lastname: string;
@@ -13,7 +18,7 @@ export interface Admin {
 }
 
 export interface AdminResponse extends Admin {
-  id: string;
+  _id: string;
   createdAt: Date;
   updatedAt: Date;
 }
