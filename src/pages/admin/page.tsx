@@ -1,25 +1,28 @@
-import { LayoutBreadcrumb } from "../layout/layout";
+"use client";
+
+import { LayoutBreadcrumb } from "../../components/custom/layout/layout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "../../ui/breadcrumb";
+} from "../../components/ui/breadcrumb";
 import { ShieldCheck } from "lucide-react";
-import Add from "./Add";
+import Add from "./adminForm"; 
+import Modal from "../../components/ui/modal";
+import AdminList from ".";
 import { useState } from "react";
-import Modal from "../../ui/modal";
-import { Button } from "../../ui/button";
-import Display from "./Display";
 
 const AdminPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => {
+  const [adminData, setAdminData] = useState<any>(null); 
+  const openModal = (data: any = null) => {
+    setAdminData(data); 
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
+    setAdminData(null); 
     setIsModalOpen(false);
   };
 
@@ -36,17 +39,13 @@ const AdminPage = () => {
         </Breadcrumb>
       </LayoutBreadcrumb>
 
-      <Button onClick={openModal}>Add Admin</Button>
+      <AdminList openModal={openModal} />
 
       {isModalOpen && (
-        <Modal
-          closeModal={closeModal}
-          style={{ width: "100px", height: "100px" }}
-        >
-          <Add closeModal={closeModal} formType="Admin" />
+        <Modal closeModal={closeModal}>
+          <Add data={adminData} closeModal={closeModal} formType="Admin" />
         </Modal>
       )}
-      <Display />
     </>
   );
 };

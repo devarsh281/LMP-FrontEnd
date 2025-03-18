@@ -15,9 +15,9 @@ import {
   User2,
   UserCheck2,
 } from "lucide-react";
-import { cn } from "../../../lib/utils";
-import { Button } from "../../ui/button";
-import { ScrollArea } from "../../ui/scroll-area";
+import { cn } from "../../lib/utils";
+import { Button } from "../../components/ui/button";
+import { ScrollArea } from "../../components/ui/scroll-area";
 import { FaBusinessTime } from "react-icons/fa";
 
 interface SidebarProps {
@@ -29,8 +29,8 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const location = useLocation();
 
   const menuItems = [
-    { icon: User2, label: "Admin", path: "/page" },
-    { icon: Users, label: "Staff", path: "/dashboard/staffs" },
+    { icon: User2, label: "Admin", path: "admin" },
+    { icon: Users, label: "Staff", path: "staff" },
     { icon: MapPin, label: "Location", path: "/dashboard/users" },
     { icon: PanelsRightBottom, label: "Bookings", path: "/dashboard/products" },
     { icon: UserCheck2, label: "Property Owners", path: "/dashboard/calendar" },
