@@ -6,21 +6,11 @@ import {
     TableHeader,
     TableRow,
 } from "../../../src/components/ui/table";
-import { Badge } from "../../../src/components/ui/badge";
 import { Input } from "../../../src/components/ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../../../src/components/ui/select";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pencil, Trash } from "lucide-react";
-import { ShieldCheck } from "lucide-react";
-import { LayoutBreadcrumb } from "../../components/custom/layout/layout";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -30,7 +20,6 @@ import {
 import { Button } from "../../../src/components/ui/button";
 import {
     AlertDialog,
-    AlertDialogTrigger,
     AlertDialogContent,
     AlertDialogHeader,
     AlertDialogTitle,
@@ -61,14 +50,14 @@ const Staff = () => {
     const [isEdit, setIsEdit] = useState(false);
     const [isView, setIsView] = useState(false);
     const [selectedStaffId, setSelectedStaffId] = useState<string | null>(null);
-    
+
     const openModal = (id?: string, edit = false, view = false) => {
         setSelectedStaffId(id || null);
         setIsEdit(edit);
         setIsView(view);
         setIsModalOpen(true);
     };
-    
+
     const closeModal = () => {
         setIsModalOpen(false);
         setIsEdit(false);
@@ -165,50 +154,50 @@ const Staff = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-    {filteredStaff.length === 0 ? (
-        <TableRow>
-            <TableCell colSpan={5} className="text-center py-6">
-                <span className="text-muted-foreground">No staff members found</span>
-            </TableCell>
-        </TableRow>
-    ) : (
-        filteredStaff.map((staff) => (
-            <TableRow
-                key={staff.id}
-                className="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                onClick={() => openModal(staff.id, false, true)} // Open in view mode
-            >
-                <TableCell className="p-3 font-medium capitalize">{staff.name}</TableCell>
-                <TableCell>{staff.email}</TableCell>
-                <TableCell>{staff.phone}</TableCell>
-                <TableCell>{staff.status}</TableCell>
-                <TableCell className="flex items-center justify-center">
-                    {/* Edit Button */}
-                    <div
-                        className="p-2 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        onClick={(e) => {
-                            e.stopPropagation(); // Prevent row click
-                            openModal(staff.id, true, false); // Open in edit mode
-                        }}
-                    >
-                        <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                    </div>
+                    {filteredStaff.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={5} className="text-center py-6">
+                                <span className="text-muted-foreground">No staff members found</span>
+                            </TableCell>
+                        </TableRow>
+                    ) : (
+                        filteredStaff.map((staff) => (
+                            <TableRow
+                                key={staff._id}
+                                className="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                                onClick={() => openModal(staff._id, false, true)} // Open in view mode
+                            >
+                                <TableCell className="p-3 font-medium capitalize">{staff.name}</TableCell>
+                                <TableCell>{staff.email}</TableCell>
+                                <TableCell>{staff.phone}</TableCell>
+                                <TableCell>{staff.status}</TableCell>
+                                <TableCell className="flex items-center justify-center">
+                                    {/* Edit Button */}
+                                    <div
+                                        className="p-2 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // Prevent row click
+                                            openModal(staff._id, true, false); // Open in edit mode
+                                        }}
+                                    >
+                                        <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                                    </div>
 
-                    {/* Delete Button */}
-                    <div
-                        className="p-2 rounded-md cursor-pointer hover:bg-red-100 dark:hover:bg-red-700 transition"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteClick(staff.id);
-                        }}
-                    >
-                        <Trash className="w-5 h-5 text-red-500 hover:text-red-700" />
-                    </div>
-                </TableCell>
-            </TableRow>
-        ))
-    )}
-</TableBody>
+                                    {/* Delete Button */}
+                                    <div
+                                        className="p-2 rounded-md cursor-pointer hover:bg-red-100 dark:hover:bg-red-700 transition"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteClick(staff._id);
+                                        }}
+                                    >
+                                        <Trash className="w-5 h-5 text-red-500 hover:text-red-700" />
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    )}
+                </TableBody>
             </Table>
 
             <AlertDialog open={open} onOpenChange={setOpen}>
@@ -228,13 +217,13 @@ const Staff = () => {
                 </AlertDialogContent>
             </AlertDialog>
             {isModalOpen && (
-    <Modal closeModal={closeModal}>
-        <h1 className="text-lg font-semibold mb-4 text-left">
-            {isEdit ? "Edit Staff" : isView ? "View Staff" : "Add Staff"}
-        </h1>
-        <StaffForm onClose={closeModal} isEdit={isEdit} isView={isView} staffId={selectedStaffId} />
-    </Modal>
-)}
+                <Modal closeModal={closeModal}>
+                    <h1 className="text-lg font-semibold mb-4 text-left">
+                        {isEdit ? "Edit Staff" : isView ? "View Staff" : "Add Staff"}
+                    </h1>
+                    <StaffForm onClose={closeModal} isEdit={isEdit} isView={isView} staffId={selectedStaffId} />
+                </Modal>
+            )}
         </div>
 
     );

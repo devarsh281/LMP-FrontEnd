@@ -10,7 +10,7 @@ import { Card } from "../../../src/components/ui/card";
 import { StaffStatus } from "./types"; // Update the import path accordingly
 import { useForm } from "react-hook-form";
 
-export const StaffForm = ({ onClose , isEdit , isView }: { onClose: () => void, isView?:boolean, isEdit?:boolean }) => {
+export const StaffForm = ({ staffId , onClose , isEdit , isView }: { onClose: () => void, isView?:boolean, isEdit?:boolean , staffId?:string }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
